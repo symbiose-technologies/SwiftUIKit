@@ -6,7 +6,7 @@
 //  Copyright © 2020 Daniel Saidi. All rights reserved.
 //
 
-#if os(iOS)
+//#if os(iOS)
 import SwiftUI
 
 /**
@@ -65,4 +65,4 @@ struct TextField_ClearButton_Previews: PreviewProvider {
         Preview()
     }
 }
-#endif
+//#endif

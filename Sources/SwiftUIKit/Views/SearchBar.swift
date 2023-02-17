@@ -6,7 +6,6 @@
 //  Copyright © 2020 Daniel Saidi. All rights reserved.
 //
 
-#if os(iOS)
 import SwiftUI
 
 /**
@@ -89,7 +88,9 @@ private extension SearchBar {
     func cancel() {
         withAnimation(.linear(duration: 0.1)) {
             text.wrappedValue = ""
+#if os(iOS)
             hideKeyboard()
+#endif
         }
     }
 }
@@ -110,4 +111,3 @@ struct SearchBar_Previews: PreviewProvider {
         Preview()
     }
 }
-#endif
