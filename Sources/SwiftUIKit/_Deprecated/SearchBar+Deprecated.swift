@@ -1,7 +1,7 @@
-#if os(iOS)
+//#if os(iOS)
 import SwiftUI
 
-@available(*, deprecated, message: "Use .searchable instead")
+//@available(*, deprecated, message: "Use .searchable instead")
 public struct SearchBar: View {
     
     public init(
@@ -76,8 +76,10 @@ private extension SearchBar {
     func cancel() {
         withAnimation(.linear(duration: 0.1)) {
             text.wrappedValue = ""
+            #if os(iOS)
             hideKeyboard()
+            #endif
         }
     }
 }
-#endif
+//#endif
