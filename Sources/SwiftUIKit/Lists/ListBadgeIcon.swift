@@ -6,8 +6,127 @@
 //  Copyright © 2023 Daniel Saidi. All rights reserved.
 //
 
-#if os(iOS)
+
 import SwiftUI
+
+
+@available(iOS 16.0,  macOS 13.0, *)
+public struct ListBadgeIconModifier: ViewModifier {
+    
+    /**
+     Create a system settings-like badge icon, with a custom
+     badge color and a white, filled icon.
+     
+     - Parameters:
+       - icon: The image to use.
+       - color: The badge color to apply.
+       - height: The icon height, by default `30`.
+     */
+    public init(
+        badgeColor: Color,
+        height: CGFloat? = 30
+    ) {
+        self.badgeColor = badgeColor
+        self.badgeStrokeColor = .clear
+        self.iconColor = .white
+        self.iconGradient = false
+        self.iconFill = true
+        self.height = height
+    }
+    
+    /**
+     Create a system settings-like badge icon, with a custom
+     badge color and a custom colored, filled icon.
+     
+     - Parameters:
+       - icon: The image to use.
+       - badgeColor: The badge color to apply.
+       - badgeStrokeColor: The badge stroke color to apply, if any.
+       - iconColor: The icon color to apply, if any.
+       - iconGradient: Whether or not to apply a gradient to the icon, by default `true`.
+       - iconFill: Whether or not to apply a fill to the icon, by default `true`.
+       - height: The icon height, by default `30`.
+     */
+    public init(
+        badgeColor: Color,
+        badgeStrokeColor: Color? = nil,
+        iconColor: Color?,
+        iconGradient: Bool = true,
+        iconFill: Bool = true,
+        height: CGFloat? = 30
+    ) {
+        self.badgeColor = badgeColor
+        self.badgeStrokeColor = badgeStrokeColor ?? badgeColor == .white ? .hex(0xe7e7e7) : .clear
+        self.iconColor = iconColor
+        self.iconGradient = iconGradient
+        self.iconFill = iconFill
+        self.height = height
+    }
+
+    private let badgeColor: Color
+    private let badgeStrokeColor: Color
+    private let iconColor: Color?
+    private let iconGradient: Bool
+    private let iconFill: Bool
+    private let height: CGFloat?
+
+    public func body(content: Content) -> some View {
+        ZStack {
+            badgeColor
+                .asGradientBackground()
+                .withStrokeColor(badgeStrokeColor)
+                .aspectRatio(1, contentMode: .fit)
+            content
+                .symbolVariant(iconFill ? .fill : .none)
+                .padding(5)
+                .aspectRatio(1, contentMode: .fit)
+                .foregroundColor(iconColor, gradientIf: iconGradient)
+        }
+        .backgroundStyle(badgeColor.gradient)
+        .frame(minHeight: height, maxHeight: height)
+    }
+    
+}
+
+@available(iOS 16.0,  macOS 13.0, *)
+public extension View {
+    
+    func asListBadgeIcon(badgeColor: Color,
+                         badgeStrokeColor: Color? = .clear,
+                         iconColor: Color? = .white,
+                         iconGradient: Bool = false,
+                         iconFill: Bool = true,
+                         height: CGFloat? = 30) -> some View {
+        self
+            .modifier(ListBadgeIconModifier(
+                badgeColor: badgeColor,
+                badgeStrokeColor: badgeStrokeColor,
+                iconColor: iconColor,
+                iconGradient: iconGradient,
+                iconFill: iconFill,
+                height: height
+            ))
+    }
+    
+    func asSystemListBadgeIcon(badgeColor: Color = .white,
+                               badgeStrokeColor: Color? = .clear,
+                               iconColor: Color? = .black.opacity(0.6),
+                               iconGradient: Bool = true,
+                               iconFill: Bool = false,
+                               height: CGFloat? = 30) -> some View {
+        self
+            .modifier(ListBadgeIconModifier(
+                badgeColor: badgeColor,
+                badgeStrokeColor: badgeStrokeColor,
+                iconColor: iconColor,
+                iconGradient: iconGradient,
+                iconFill: iconFill,
+                height: height
+            ))
+    }
+    
+}
+
 
 /**
  This view mimics the color badge icons that can be found in
@@ -23,7 +142,7 @@ import SwiftUI
  Note that icon modification, like applying foreground color
  and symbol variant, works best with SF Symbols.
  */
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 public struct ListBadgeIcon: View {
     
     /**
@@ -104,7 +223,7 @@ public struct ListBadgeIcon: View {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 public extension ListBadgeIcon {
     
     /// A blue language settings icon.
@@ -184,7 +303,7 @@ public extension ListBadgeIcon {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 private extension Color {
     
     func asGradientBackground() -> some View {
@@ -192,7 +311,7 @@ private extension Color {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 private extension View {
     
     @ViewBuilder
@@ -219,7 +338,7 @@ private extension View {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, macOS 13.0, *)
 struct ListBadgeIcon_Previews: PreviewProvider {
 
     static var previews: some View {
@@ -245,4 +364,4 @@ struct ListBadgeIcon_Previews: PreviewProvider {
         }
     }
 }
-#endif
+
